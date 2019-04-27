@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "coffeespawner:coffee_machine"
+    }
+  ],
+  "result": {
+    "item": "coffeespawner:coffee_machine_pan"
+  }
+}

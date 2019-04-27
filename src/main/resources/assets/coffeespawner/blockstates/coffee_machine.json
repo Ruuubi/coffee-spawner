@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "facing=north,modelid=0": { "model": "coffeespawner:block/coffee_machine_no_mug", "y": 180 },
+        "facing=south,modelid=0": { "model": "coffeespawner:block/coffee_machine_no_mug" },
+        "facing=west,modelid=0":  { "model": "coffeespawner:block/coffee_machine_no_mug", "y": 90 },
+        "facing=east,modelid=0":  { "model": "coffeespawner:block/coffee_machine_no_mug", "y": 270 },
+
+        "facing=north,modelid=1": { "model": "coffeespawner:block/coffee_machine_mug", "y": 180 },
+        "facing=south,modelid=1": { "model": "coffeespawner:block/coffee_machine_mug" },
+        "facing=west,modelid=1":  { "model": "coffeespawner:block/coffee_machine_mug", "y": 90 },
+        "facing=east,modelid=1":  { "model": "coffeespawner:block/coffee_machine_mug", "y": 270 }
+    }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IDI",
+    "MCW",
+	"IHI"
+  ],
+  "key": {
+    "I": {
+	  "item": "minecraft:iron_ingot"
+    },
+	"D": {
+	  "item": "minecraft:daylight_detector"
+    },
+	"M": {
+	  "item": "minecraft:milk_bucket"
+    },
+	"C": {
+      "item": "minecraft:cocoa_beans"
+    },
+	"W": {
+      "item": "minecraft:water_bucket"
+    },
+	"H": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "result": {
+    "item": "coffeespawner:coffee_machine"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "coffeespawner:coffee_milk"
+    },
+	{
+	  "item": "minecraft:sugar"
+	}
+  ],
+  "result": {
+    "item": "coffeespawner:coffee_milk_sugar"
+  }
+}
