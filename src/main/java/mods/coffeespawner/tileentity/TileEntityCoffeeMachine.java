@@ -3,12 +3,12 @@ package mods.coffeespawner.tileentity;
 import mods.coffeespawner.CoffeeSpawner;
 import mods.coffeespawner.block.BlockCoffeeMachine;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 
-public class TileEntityCoffeeMachine extends TileEntity implements ITickable {
+public class TileEntityCoffeeMachine extends TileEntity implements ITickableTileEntity {
 	
 	public TileEntityCoffeeMachine() {
 		super(CoffeeSpawner.tile_coffee_machine);
@@ -17,15 +17,15 @@ public class TileEntityCoffeeMachine extends TileEntity implements ITickable {
 	private boolean mug = false;
 	
 	@Override
-	public void read(NBTTagCompound nbt) {
+	public void read(CompoundNBT nbt) {
         super.read(nbt);
     	this.mug = nbt.getBoolean("Mug");
     }
 	
 	@Override
-	public NBTTagCompound write(NBTTagCompound nbt) {
+	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
-		nbt.setBoolean("Mug", this.mug);
+		nbt.putBoolean("Mug", this.mug);
 		return nbt;
 	}
 	
@@ -34,7 +34,7 @@ public class TileEntityCoffeeMachine extends TileEntity implements ITickable {
 		if (!getWorld().isRemote && this.getWorld().getDayTime() % 20L == 0L) {
 			long time = this.getWorld().getDayTime() % 24000L;
 			if (!mug && time == 40) {
-				IBlockState state = this.getWorld().getBlockState(pos);
+				BlockState state = this.getWorld().getBlockState(pos);
 				if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
 					Block block = state.getBlock();
 					BlockCoffeeMachine cs = (BlockCoffeeMachine) block;

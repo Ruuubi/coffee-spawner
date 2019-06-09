@@ -7,8 +7,8 @@ import mods.coffeespawner.block.BlockCoffeeMachine;
 import mods.coffeespawner.item.ItemCoffee;
 import mods.coffeespawner.tileentity.TileEntityCoffeeMachine;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
@@ -45,8 +45,8 @@ public class CoffeeSpawner {
 		@SubscribeEvent
         public static void registerItems(RegistryEvent.Register<Item> event) {
 			IForgeRegistry<Item> registry = event.getRegistry();
-			registry.register(new ItemBlock(coffee_machine, new Item.Properties().group(ItemGroup.FOOD)).setRegistryName("coffee_machine"));
-			registry.register(new ItemBlock(coffee_machine_pan, new Item.Properties().group(ItemGroup.FOOD)).setRegistryName("coffee_machine_pan"));
+			registry.register(new BlockItem(coffee_machine, new Item.Properties().group(ItemGroup.FOOD)).setRegistryName("coffee_machine"));
+			registry.register(new BlockItem(coffee_machine_pan, new Item.Properties().group(ItemGroup.FOOD)).setRegistryName("coffee_machine_pan"));
 			registry.register(coffee = 				new ItemCoffee("coffee", 			4, 0.625F, "Schwarz und lecker. Echt jetzt."));
 			registry.register(coffee_milk = 		new ItemCoffee("coffee_milk", 		5, 0.6F, null));
 			registry.register(coffee_sugar = 		new ItemCoffee("coffee_sugar", 		5, 0.6F, null));
@@ -56,7 +56,7 @@ public class CoffeeSpawner {
 		@SuppressWarnings("unchecked")
 		@SubscribeEvent
 		public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-			event.getRegistry().register(tile_coffee_machine = (TileEntityType<TileEntityCoffeeMachine>) TileEntityType.Builder.create(TileEntityCoffeeMachine::new).build(null).setRegistryName("tile_coffee_machine"));
+			event.getRegistry().register(tile_coffee_machine = (TileEntityType<TileEntityCoffeeMachine>) TileEntityType.Builder.func_223042_a(TileEntityCoffeeMachine::new, coffee_machine, coffee_machine_pan).build(null).setRegistryName("tile_coffee_machine"));
 		}
 	}
 }
