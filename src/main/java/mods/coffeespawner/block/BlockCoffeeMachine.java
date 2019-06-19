@@ -94,13 +94,6 @@ public class BlockCoffeeMachine extends Block {
 		return BlockRenderLayer.CUTOUT;
 	}
 
-	// TODO: Still needed?
-//	@Deprecated
-//	@Override
-//	public BlockFaceShape getBlockFaceShape(IBlockReader world, BlockState state, BlockPos pos, Direction face) {
-//		return BlockFaceShape.UNDEFINED;
-//	}
-
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
 		return BOUNDING_BOX_NORMAL;
@@ -115,12 +108,6 @@ public class BlockCoffeeMachine extends Block {
 	public boolean isSolid(BlockState state) {
 		return true;
 	}
-
-	// TODO: Still needed?
-//	@Override
-//	public boolean isFullCube(BlockState state) {
-//		return false;
-//	}
 	
 	public void spawnMug(World world, BlockPos pos, TileEntityCoffeeMachine tile) {
 		if (world == null || pos == null || tile == null || tile.hasMug())
