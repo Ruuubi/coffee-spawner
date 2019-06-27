@@ -56,7 +56,7 @@ public class CoffeeSpawner {
 		@SuppressWarnings("unchecked")
 		@SubscribeEvent
 		public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-			event.getRegistry().register(tile_coffee_machine = (TileEntityType<TileEntityCoffeeMachine>) TileEntityType.Builder.func_223042_a(TileEntityCoffeeMachine::new, coffee_machine, coffee_machine_pan).build(null).setRegistryName("tile_coffee_machine"));
+			event.getRegistry().register(tile_coffee_machine = (TileEntityType<TileEntityCoffeeMachine>) TileEntityType.Builder.create(TileEntityCoffeeMachine::new, coffee_machine, coffee_machine_pan).build(null).setRegistryName("tile_coffee_machine"));
 		}
 	}
 }
