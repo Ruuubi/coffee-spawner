@@ -9,26 +9,26 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityCoffeeMachine extends TileEntity implements ITickableTileEntity {
-	
+
 	public TileEntityCoffeeMachine() {
 		super(CoffeeSpawner.tile_coffee_machine);
 	}
 
 	private boolean mug = false;
-	
+
 	@Override
 	public void read(CompoundNBT nbt) {
-        super.read(nbt);
-    	this.mug = nbt.getBoolean("Mug");
-    }
-	
+		super.read(nbt);
+		this.mug = nbt.getBoolean("Mug");
+	}
+
 	@Override
 	public CompoundNBT write(CompoundNBT nbt) {
 		super.write(nbt);
 		nbt.putBoolean("Mug", this.mug);
 		return nbt;
 	}
-	
+
 	@Override
 	public void tick() {
 		if (!getWorld().isRemote && this.getWorld().getDayTime() % 20L == 0L) {
@@ -43,11 +43,11 @@ public class TileEntityCoffeeMachine extends TileEntity implements ITickableTile
 			}
 		}
 	}
-	
+
 	public boolean hasMug() {
 		return mug;
 	}
-	
+
 	public void setMug(boolean state) {
 		mug = state;
 	}

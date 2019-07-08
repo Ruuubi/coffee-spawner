@@ -44,12 +44,12 @@ public class BlockCoffeeMachine extends Block {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
-	
+
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(FACING, MODELID);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
 		if (!world.isRemote && player != null) {
@@ -70,7 +70,7 @@ public class BlockCoffeeMachine extends Block {
 	public boolean hasTileEntity(BlockState state) {
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
 		return new TileEntityCoffeeMachine();
@@ -80,7 +80,7 @@ public class BlockCoffeeMachine extends Block {
 		TileEntity tile = world.getTileEntity(pos);
 		return (tile instanceof TileEntityCoffeeMachine) ? (TileEntityCoffeeMachine) tile : null;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
@@ -103,15 +103,14 @@ public class BlockCoffeeMachine extends Block {
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
 		return (this.isPanModel) ? BOUNDING_BOX_PAN : BOUNDING_BOX_NORMAL;
 	}
-	
+
 	@Override
 	public boolean isSolid(BlockState state) {
 		return true;
 	}
-	
+
 	public void spawnMug(World world, BlockPos pos, TileEntityCoffeeMachine tile) {
-		if (world == null || pos == null || tile == null || tile.hasMug())
-			return;
+		if (world == null || pos == null || tile == null || tile.hasMug()) return;
 		BlockState state = world.getBlockState(pos);
 		if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
 			world.setBlockState(pos, state.with(MODELID, 1));
@@ -121,8 +120,7 @@ public class BlockCoffeeMachine extends Block {
 	}
 
 	public void removeMug(World world, BlockPos pos, TileEntityCoffeeMachine tile) {
-		if (world == null || pos == null || tile == null || !tile.hasMug())
-			return;
+		if (world == null || pos == null || tile == null || !tile.hasMug()) return;
 		BlockState state = world.getBlockState(pos);
 		if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
 			world.setBlockState(pos, state.with(MODELID, 0));

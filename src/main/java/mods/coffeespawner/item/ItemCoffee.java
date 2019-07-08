@@ -21,15 +21,15 @@ public class ItemCoffee extends Item {
 	private final String TOOLTIP;
 
 	public ItemCoffee(String name, int heal, float saturation, String tooltip) {
-		super(new Item.Properties().group(ItemGroup.FOOD).food(
-				new Food.Builder().hunger(heal).saturation(saturation)
-				.effect(new EffectInstance(Effects.SPEED, 100, 2), 1.0F)
-				.effect(new EffectInstance(Effects.JUMP_BOOST, 100, 2), 1.0F)
-				.build()));
+		super(new Item.Properties().group(ItemGroup.FOOD).food(new Food.Builder().
+				hunger(heal).saturation(saturation).
+				effect(new EffectInstance(Effects.SPEED, 100, 2), 1.0F).
+				effect(new EffectInstance(Effects.JUMP_BOOST, 100, 2), 1.0F).
+				build()));
 		this.setRegistryName(name);
 		this.TOOLTIP = tooltip;
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World player, List<ITextComponent> list, ITooltipFlag advanced) {
 		if (TOOLTIP != null) list.add(new StringTextComponent(TOOLTIP));
