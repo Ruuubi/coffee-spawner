@@ -1,1 +1,1 @@
-https://minecraft.curseforge.com/projects/coffee-spawner
+Mod Link: https://www.curseforge.com/minecraft/mc-mods/coffee-spawner
