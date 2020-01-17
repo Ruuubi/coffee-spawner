@@ -14,7 +14,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -51,19 +51,19 @@ public class BlockCoffeeMachine extends Block {
 	}
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
+	public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
 		if (!world.isRemote && player != null) {
 			TileEntityCoffeeMachine tile = getTile(world, pos);
 			if (tile != null) {
 				if (tile.hasMug()) {
 					this.removeMug(world, pos, tile);
-					InventoryHelper.spawnItemStack(world, player.posX, player.posY, player.posZ, new ItemStack(CoffeeSpawner.coffee));
+					InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new ItemStack(CoffeeSpawner.coffee));
 				} else {
 					player.sendMessage(new StringTextComponent(TextFormatting.DARK_AQUA + "Coffee spawns tomorrow."));
 				}
 			}
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override
@@ -90,11 +90,6 @@ public class BlockCoffeeMachine extends Block {
 	}
 
 	@Override
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
-
-	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
 		return BOUNDING_BOX_NORMAL;
 	}
@@ -102,11 +97,6 @@ public class BlockCoffeeMachine extends Block {
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
 		return (this.isPanModel) ? BOUNDING_BOX_PAN : BOUNDING_BOX_NORMAL;
-	}
-
-	@Override
-	public boolean isSolid(BlockState state) {
-		return true;
 	}
 
 	public void spawnMug(World world, BlockPos pos, TileEntityCoffeeMachine tile) {
