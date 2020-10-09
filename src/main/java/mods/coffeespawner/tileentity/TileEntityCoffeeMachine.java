@@ -17,8 +17,8 @@ public class TileEntityCoffeeMachine extends TileEntity implements ITickableTile
 	private boolean mug = false;
 
 	@Override
-	public void read(CompoundNBT nbt) {
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		this.mug = nbt.getBoolean("Mug");
 	}
 

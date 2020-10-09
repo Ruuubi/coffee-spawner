@@ -1,21 +1,19 @@
 modLoader="javafml"
-loaderVersion="[30,)"
+loaderVersion="[34,)"
 issueTrackerURL="https://minecraft.curseforge.com/projects/coffee-spawner/issues"
+license="All rights reserved"
 
 [[mods]] #mandatory
 modId="coffeespawner"
-version="1.15.1-6.0.0"
+version="1.16.3-7.0.0"
 displayName="Coffee Spawner"
-# updateJSONURL=""
 displayURL="https://minecraft.curseforge.com/projects/coffee-spawner"
-# logoFile="logo.png"
-# credits=""
 authors="Ruuubi"
 description='''Adds a coffee machine which spawns a drinkable coffee every morning'''
 
 [[dependencies.coffeespawner]]
     modId="forge"
     mandatory=true
-    versionRange="[30.0.41,)"
+    versionRange="[34.1.14,)"
     ordering="NONE"
 	side="BOTH"

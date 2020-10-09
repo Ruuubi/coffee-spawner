@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -51,7 +52,7 @@ public class BlockCoffeeMachine extends Block {
 	}
 
 	@Override
-	public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
 		if (!world.isRemote && player != null) {
 			TileEntityCoffeeMachine tile = getTile(world, pos);
 			if (tile != null) {
@@ -59,7 +60,7 @@ public class BlockCoffeeMachine extends Block {
 					this.removeMug(world, pos, tile);
 					InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new ItemStack(CoffeeSpawner.coffee));
 				} else {
-					player.sendMessage(new StringTextComponent(TextFormatting.DARK_AQUA + "Coffee spawns tomorrow."));
+					player.sendMessage(new StringTextComponent(TextFormatting.DARK_AQUA + "Coffee spawns tomorrow."), Util.DUMMY_UUID);
 				}
 			}
 		}
