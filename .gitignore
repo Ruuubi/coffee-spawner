@@ -21,6 +21,7 @@ build
 eclipse
 run-client
 run-server
+run-data
 
 # Files from Forge MDK
 forge*changelog.txt
