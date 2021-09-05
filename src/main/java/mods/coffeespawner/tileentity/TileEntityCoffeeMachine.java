@@ -2,44 +2,40 @@ package mods.coffeespawner.tileentity;
 
 import mods.coffeespawner.CoffeeSpawner;
 import mods.coffeespawner.block.BlockCoffeeMachine;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class TileEntityCoffeeMachine extends TileEntity implements ITickableTileEntity {
+public class TileEntityCoffeeMachine extends BlockEntity {
 
-	public TileEntityCoffeeMachine() {
-		super(CoffeeSpawner.tile_coffee_machine);
+	public TileEntityCoffeeMachine(BlockPos pos, BlockState state) {
+		super(CoffeeSpawner.tile_coffee_machine, pos, state);
 	}
 
 	private boolean mug = false;
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
-		super.read(state, nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 		this.mug = nbt.getBoolean("Mug");
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
-		super.write(nbt);
+	public CompoundTag save(CompoundTag nbt) {
+		super.save(nbt);
 		nbt.putBoolean("Mug", this.mug);
 		return nbt;
 	}
 
-	@Override
-	public void tick() {
-		if (!getWorld().isRemote && this.getWorld().getDayTime() % 20L == 0L) {
-			long time = this.getWorld().getDayTime() % 24000L;
-			if (!mug && time == 40) {
-				BlockState state = this.getWorld().getBlockState(pos);
-				if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
-					Block block = state.getBlock();
-					BlockCoffeeMachine cs = (BlockCoffeeMachine) block;
-					cs.spawnMug(this.getWorld(), pos, this);
-				}
+	public void serverTick() {
+		if (!mug && this.getLevel().getDayTime() % 24000L == 40) {
+			BlockState state = this.getLevel().getBlockState(this.getBlockPos());
+			if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
+				Block block = state.getBlock();
+				BlockCoffeeMachine cs = (BlockCoffeeMachine) block;
+				cs.spawnMug(this.getLevel(), this.getBlockPos(), this);
 			}
 		}
 	}

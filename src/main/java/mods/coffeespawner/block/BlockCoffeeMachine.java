@@ -1,123 +1,136 @@
 package mods.coffeespawner.block;
 
+import javax.annotation.Nullable;
+
 import mods.coffeespawner.CoffeeSpawner;
 import mods.coffeespawner.tileentity.TileEntityCoffeeMachine;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class BlockCoffeeMachine extends Block {
+public class BlockCoffeeMachine extends Block implements EntityBlock {
 
-	private static final VoxelShape BOUNDING_BOX_NORMAL = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 15.0D, 13.0D);
-	private static final VoxelShape BOUNDING_BOX_PAN = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 17.0D, 13.0D);
-	private static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+	private static final VoxelShape BOUNDING_BOX_NORMAL = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 15.0D, 13.0D);
+	private static final VoxelShape BOUNDING_BOX_PAN = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 17.0D, 13.0D);
+	private static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 	private static final IntegerProperty MODELID = IntegerProperty.create("modelid", 0, 1);
 	private final boolean isPanModel;
 
 	public BlockCoffeeMachine(String name, boolean isPanModel) {
-		super(Block.Properties.create(Material.EARTH).hardnessAndResistance(0.5F, 5.0F));
+		super(Block.Properties.of(Material.DIRT).strength(0.5F, 5.0F));
 		this.isPanModel = isPanModel;
 		this.setRegistryName(name);
-		this.setDefaultState(this.stateContainer.getBaseState().with(MODELID, 0).with(FACING, Direction.NORTH));
+		this.registerDefaultState(this.stateDefinition.any().setValue(MODELID, 0).setValue(FACING, Direction.NORTH));
 	}
 
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING, MODELID);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTrace) {
-		if (!world.isRemote && player != null) {
-			TileEntityCoffeeMachine tile = getTile(world, pos);
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTrace) {
+		if (!level.isClientSide() && player != null) {
+			TileEntityCoffeeMachine tile = getTile(level, pos);
 			if (tile != null) {
 				if (tile.hasMug()) {
-					this.removeMug(world, pos, tile);
-					InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new ItemStack(CoffeeSpawner.coffee));
+					this.removeMug(level, pos, tile);
+					Containers.dropItemStack(level, player.position().x, player.position().y, player.position().z, new ItemStack(CoffeeSpawner.coffee));
 				} else {
-					player.sendMessage(new StringTextComponent(TextFormatting.DARK_AQUA + "Coffee spawns tomorrow."), Util.DUMMY_UUID);
+					player.sendMessage(new TextComponent(ChatFormatting.DARK_AQUA + "Coffee spawns tomorrow."), Util.NIL_UUID);
 				}
 			}
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileEntityCoffeeMachine();
-	}
-
-	public TileEntityCoffeeMachine getTile(World world, BlockPos pos) {
-		TileEntity tile = world.getTileEntity(pos);
+	public TileEntityCoffeeMachine getTile(Level level, BlockPos pos) {
+		BlockEntity tile = level.getBlockEntity(pos);
 		return (tile instanceof TileEntityCoffeeMachine) ? (TileEntityCoffeeMachine) tile : null;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() != newState.getBlock()) {
-			super.onReplaced(state, world, pos, newState, isMoving);
+			super.onRemove(state, level, pos, newState, isMoving);
 		}
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection) {
 		return BOUNDING_BOX_NORMAL;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selection) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext selection) {
 		return (this.isPanModel) ? BOUNDING_BOX_PAN : BOUNDING_BOX_NORMAL;
 	}
 
-	public void spawnMug(World world, BlockPos pos, TileEntityCoffeeMachine tile) {
-		if (world == null || pos == null || tile == null || tile.hasMug()) return;
-		BlockState state = world.getBlockState(pos);
+	public void spawnMug(Level level, BlockPos pos, TileEntityCoffeeMachine tile) {
+		if (level == null || pos == null || tile == null || tile.hasMug()) return;
+		BlockState state = level.getBlockState(pos);
 		if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
-			world.setBlockState(pos, state.with(MODELID, 1));
+			level.setBlockAndUpdate(pos, state.setValue(MODELID, 1));
 			tile.setMug(true);
-			tile.markDirty();
+			tile.setChanged();
 		}
 	}
 
-	public void removeMug(World world, BlockPos pos, TileEntityCoffeeMachine tile) {
-		if (world == null || pos == null || tile == null || !tile.hasMug()) return;
-		BlockState state = world.getBlockState(pos);
+	public void removeMug(Level level, BlockPos pos, TileEntityCoffeeMachine tile) {
+		if (level == null || pos == null || tile == null || !tile.hasMug()) return;
+		BlockState state = level.getBlockState(pos);
 		if (state != null && state.getBlock() instanceof BlockCoffeeMachine) {
-			world.setBlockState(pos, state.with(MODELID, 0));
+			level.setBlockAndUpdate(pos, state.setValue(MODELID, 0));
 			tile.setMug(false);
-			tile.markDirty();
+			tile.setChanged();
 		}
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new TileEntityCoffeeMachine(pos, state);
+	}
+	
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+		if (level.isClientSide()) {
+			return null;
+		}
+		return (level1, blockPos, blockState, t) -> {
+			if (t instanceof TileEntityCoffeeMachine tile) {
+				tile.serverTick();
+			}
+		};
 	}
 
 }
