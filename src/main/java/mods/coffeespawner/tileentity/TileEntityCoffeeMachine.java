@@ -23,10 +23,8 @@ public class TileEntityCoffeeMachine extends BlockEntity {
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
+	protected void saveAdditional(CompoundTag nbt) {
 		nbt.putBoolean("Mug", this.mug);
-		return nbt;
 	}
 
 	public void serverTick() {
