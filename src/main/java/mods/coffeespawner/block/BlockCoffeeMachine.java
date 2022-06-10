@@ -5,10 +5,9 @@ import javax.annotation.Nullable;
 import mods.coffeespawner.CoffeeSpawner;
 import mods.coffeespawner.tileentity.TileEntityCoffeeMachine;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -40,10 +39,9 @@ public class BlockCoffeeMachine extends Block implements EntityBlock {
 	private static final IntegerProperty MODELID = IntegerProperty.create("modelid", 0, 1);
 	private final boolean isPanModel;
 
-	public BlockCoffeeMachine(String name, boolean isPanModel) {
+	public BlockCoffeeMachine(boolean isPanModel) {
 		super(Block.Properties.of(Material.DIRT).strength(0.5F, 5.0F));
 		this.isPanModel = isPanModel;
-		this.setRegistryName(name);
 		this.registerDefaultState(this.stateDefinition.any().setValue(MODELID, 0).setValue(FACING, Direction.NORTH));
 	}
 
@@ -63,9 +61,9 @@ public class BlockCoffeeMachine extends Block implements EntityBlock {
 			if (tile != null) {
 				if (tile.hasMug()) {
 					this.removeMug(level, pos, tile);
-					Containers.dropItemStack(level, player.position().x, player.position().y, player.position().z, new ItemStack(CoffeeSpawner.coffee));
+					Containers.dropItemStack(level, player.position().x, player.position().y, player.position().z, new ItemStack(CoffeeSpawner.ITEM_COFFEE.get()));
 				} else {
-					player.sendMessage(new TextComponent(ChatFormatting.DARK_AQUA + "Coffee spawns tomorrow."), Util.NIL_UUID);
+					player.displayClientMessage(Component.literal(ChatFormatting.DARK_AQUA + "Coffee spawns tomorrow."), false);
 				}
 			}
 		}

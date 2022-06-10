@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileEntityCoffeeMachine extends BlockEntity {
 
 	public TileEntityCoffeeMachine(BlockPos pos, BlockState state) {
-		super(CoffeeSpawner.tile_coffee_machine, pos, state);
+		super(CoffeeSpawner.TILE_COFFEE_MACHINE.get(), pos, state);
 	}
 
 	private boolean mug = false;

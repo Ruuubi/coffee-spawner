@@ -11,10 +11,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod("coffeespawner")
 public class CoffeeSpawner {
@@ -23,40 +25,29 @@ public class CoffeeSpawner {
 	public static final String MODNAME_NOSPACE = "CoffeeSpawner";
 	public static final Logger LOGGER = LogManager.getLogger();
 
-	public static BlockCoffeeMachine coffee_machine;
-	public static BlockCoffeeMachine coffee_machine_pan;
-	public static ItemCoffee coffee;
-	public static ItemCoffee coffee_milk;
-	public static ItemCoffee coffee_sugar;
-	public static ItemCoffee coffee_milk_sugar;
-	public static BlockEntityType<TileEntityCoffeeMachine> tile_coffee_machine;
+	// Blocks
+	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
+	public static final RegistryObject<Block> BLOCK_COFFEE_MACHINE = BLOCKS.register("coffee_machine", () -> new BlockCoffeeMachine(false));
+	public static final RegistryObject<Block> BLOCK_COFFEE_MACHINE_PAN = BLOCKS.register("coffee_machine_pan", () -> new BlockCoffeeMachine(true));
 
-	public CoffeeSpawner() {}
+	// Items
+	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+	public static final RegistryObject<Item> ITEM_COFFEE_MACHINE = ITEMS.register("coffee_machine", () -> new BlockItem(BLOCK_COFFEE_MACHINE.get(), new Item.Properties().tab(CreativeModeTab.TAB_FOOD)));
+	public static final RegistryObject<Item> ITEM_COFFEE_MACHINE_PAN = ITEMS.register("coffee_machine_pan", () -> new BlockItem(BLOCK_COFFEE_MACHINE_PAN.get(), new Item.Properties().tab(CreativeModeTab.TAB_FOOD)));
+	public static final RegistryObject<Item> ITEM_COFFEE = ITEMS.register("coffee", () -> new ItemCoffee(4, 0.625F));
+	public static final RegistryObject<Item> ITEM_COFFEE_MILK = ITEMS.register("coffee_milk", () -> new ItemCoffee(5, 0.6F));
+	public static final RegistryObject<Item> ITEM_COFFEE_SUGAR = ITEMS.register("coffee_sugar", () -> new ItemCoffee(5, 0.6F));
+	public static final RegistryObject<Item> ITEM_COFFEE_MILK_SUGAR = ITEMS.register("coffee_milk_sugar", () -> new ItemCoffee(8, 0.5625F));
 
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class RegistryEvents {
-		@SubscribeEvent
-		public static void registerBlocks(RegistryEvent.Register<Block> event) {
-			IForgeRegistry<Block> registry = event.getRegistry();
-			registry.register(coffee_machine = new BlockCoffeeMachine("coffee_machine", false));
-			registry.register(coffee_machine_pan = new BlockCoffeeMachine("coffee_machine_pan", true));
-		}
-
-		@SubscribeEvent
-		public static void registerItems(RegistryEvent.Register<Item> event) {
-			IForgeRegistry<Item> registry = event.getRegistry();
-			registry.register(new BlockItem(coffee_machine, new Item.Properties().tab(CreativeModeTab.TAB_FOOD)).setRegistryName("coffee_machine"));
-			registry.register(new BlockItem(coffee_machine_pan, new Item.Properties().tab(CreativeModeTab.TAB_FOOD)).setRegistryName("coffee_machine_pan"));
-			registry.register(coffee = new ItemCoffee("coffee", 4, 0.625F));
-			registry.register(coffee_milk = new ItemCoffee("coffee_milk", 5, 0.6F));
-			registry.register(coffee_sugar = new ItemCoffee("coffee_sugar", 5, 0.6F));
-			registry.register(coffee_milk_sugar = new ItemCoffee("coffee_milk_sugar", 8, 0.5625F));
-		}
-
-		@SuppressWarnings("unchecked")
-		@SubscribeEvent
-		public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> event) {
-			event.getRegistry().register(tile_coffee_machine = (BlockEntityType<TileEntityCoffeeMachine>) BlockEntityType.Builder.of(TileEntityCoffeeMachine::new, coffee_machine, coffee_machine_pan).build(null).setRegistryName("tile_coffee_machine"));
-		}
+	// Block Entities
+	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MODID);
+	public static final RegistryObject<BlockEntityType<TileEntityCoffeeMachine>> TILE_COFFEE_MACHINE = BLOCK_ENTITIES.register("tile_coffee_machine", () -> BlockEntityType.Builder.of(TileEntityCoffeeMachine::new, BLOCK_COFFEE_MACHINE.get(), BLOCK_COFFEE_MACHINE_PAN.get()).build(null));
+		
+	public CoffeeSpawner() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		BLOCKS.register(modEventBus);
+		ITEMS.register(modEventBus);
+		BLOCK_ENTITIES.register(modEventBus);
 	}
+
 }
