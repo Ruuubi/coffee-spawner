@@ -40,7 +40,7 @@ public class CoffeeSpawner {
 	public static final RegistryObject<Item> ITEM_COFFEE_MILK_SUGAR = ITEMS.register("coffee_milk_sugar", () -> new ItemCoffee(8, 0.5625F));
 
 	// Block Entities
-	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MODID);
+	private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
 	public static final RegistryObject<BlockEntityType<TileEntityCoffeeMachine>> TILE_COFFEE_MACHINE = BLOCK_ENTITIES.register("tile_coffee_machine", () -> BlockEntityType.Builder.of(TileEntityCoffeeMachine::new, BLOCK_COFFEE_MACHINE.get(), BLOCK_COFFEE_MACHINE_PAN.get()).build(null));
 		
 	public CoffeeSpawner() {
