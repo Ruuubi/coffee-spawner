@@ -1,9 +1,9 @@
 {
 	"parent": "block/orientable",
     "textures": {
-		"particle": "coffeespawner:blocks/particle",
-        "0": "coffeespawner:blocks/casing",
-        "1": "coffeespawner:blocks/panskin"
+		"particle": "coffeespawner:block/particle",
+        "0": "coffeespawner:block/casing",
+        "1": "coffeespawner:block/panskin"
     },
     "elements": [
         {

@@ -1,13 +1,13 @@
 {
 	"parent": "block/orientable",
     "textures": {
-		"particle": "coffeespawner:blocks/casing",
-        "0": "coffeespawner:blocks/grid",
-        "1": "coffeespawner:blocks/casing_sticker",
-        "2": "coffeespawner:blocks/casing",
-        "3": "coffeespawner:blocks/buttons",
-        "4": "coffeespawner:blocks/mug",
-        "6": "coffeespawner:blocks/coffee"
+		"particle": "coffeespawner:block/casing",
+        "0": "coffeespawner:block/grid",
+        "1": "coffeespawner:block/casing_sticker",
+        "2": "coffeespawner:block/casing",
+        "3": "coffeespawner:block/buttons",
+        "4": "coffeespawner:block/mug",
+        "6": "coffeespawner:block/coffee"
     },
     "elements": [
         {
